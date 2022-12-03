@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const {DataTypes} = require('sequelize');
 
 
 const sequelize = new Sequelize(
@@ -22,7 +23,7 @@ const sequelize = new Sequelize(
 );
 
 sequelize.addHook("beforeDefine", (attributes, model_info) => {
-  attributes.is_deleted = {
+  attributes.isDeleted = {
     type: new Sequelize.DataTypes.BOOLEAN(),
     defaultValue: false,
   };

@@ -1,4 +1,5 @@
 
+const {DataTypes} = require('sequelize');
 const sequelize = require('../settings/database/db_connection');
 
 const CustomObject = sequelize.define('CustomObject', {

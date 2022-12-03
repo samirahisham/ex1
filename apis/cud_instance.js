@@ -11,7 +11,7 @@ exports.saveInstance = async (user, InstanceModel, data, options={})=>{
         modifiedBy: user_id,
         deletedAt: null,
         deletedBy: null,
-        is_deleted: false,
+        isDeleted: false,
     }, options)
 
     return instance
@@ -20,7 +20,7 @@ exports.saveInstance = async (user, InstanceModel, data, options={})=>{
 
 
 exports.updateInstance = async (user, instance, data, read_only_fields=[], options={})=>{
-        read_only_fields.concat(['id', 'createdBy', 'modifiedBy', 'deletedAt', 'deletedBy', 'is_deleted']);
+        read_only_fields.concat(['id', 'createdBy', 'modifiedBy', 'deletedAt', 'deletedBy', 'isDeleted']);
 
         Object.keys(data).map(Key=>{
             if (Key !== "id" && !read_only_fields.includes(Key)){
@@ -28,10 +28,10 @@ exports.updateInstance = async (user, instance, data, read_only_fields=[], optio
             }
         })
 
-        instance.modifiedBy = user.id;
+        instance.modifiedBy = user?.id || "";
         instance.deletedAt = null;
         instance.deletedBy = null;
-        instance.is_deleted = false;
+        instance.isDeleted = false;
 
         await instance.save(options);
 
@@ -47,8 +47,8 @@ exports.deleteInstance = async (user, instance, options={}, permanent_delete=fal
         instance.destroy(options);
     } else {
         instance.deletedAt = new Date();
-        instance.deletedBy = user.id;
-        instance.is_deleted = true;
+        instance.deletedBy = user?.id||"";
+        instance.isDeleted = true;
         await instance.save(options);
     }
 
