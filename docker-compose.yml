@@ -1,0 +1,41 @@
+# docker-compose.yml
+
+version: "3.9"
+services:
+
+  ex1_db:
+    container_name: ex1_db
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ex1_db
+    volumes:
+      - ex1_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /usr/kib/src/app
+    volumes:
+      - .:/usr/kib/src/app
+      - /usr/kib/src/app/node_modules
+    restart: always
+    depends_on:
+      - ex1_db
+    ports:
+      - "8080:8080"
+    command: nodemon  --legacy-watch app.js
+    environment:
+      - DATABASE_HOST=ex1_db
+      - DATABASE_TYPE=postgres
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=ex1_db
+      - DB_PORT=5432
+
+volumes:
+  ex1_db:
